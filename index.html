@@ -1,8 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Calculadora de Horas y Pago - Aplicación web para calcular y gestionar horas de trabajo">
     <meta name="theme-color" content="#2c3e50">
     <title>Calculadora de Horas y Pago</title>
     <link rel="stylesheet" href="style.css">
@@ -31,7 +33,7 @@
     <div class="container">
         
         <div class="calculator">
-            <button id="donationsButton">
+            <button id="donationsButton" aria-label="Ver donaciones">
                 <span class="dollar-sign">$</span>
             </button>
             <h1><u>Tu Balance</u></h1>
@@ -44,17 +46,17 @@
             <div class="input-grid">
                 <div class="input-group full-width">
                     <label for="date">Fecha de servicio:</label>
-                    <input type="date" id="date">
+                    <input type="date" id="date" required>
                 </div>
 
                 <div class="input-group full-width">
                     <label for="serviceName">Nombre de servicio:</label>
-                    <input type="text" id="serviceName">
+                    <input type="text" id="serviceName" required>
                 </div>
 
                 <div class="input-group">
                     <label for="serviceType">Tipo de servicio:</label>
-                    <select id="serviceType">
+                    <select id="serviceType" required>
                         <option value="">Seleccionar tipo de servicio</option>
                         <option value="Publico ordinario">Publico ordinario</option>
                         <option value="Publico extraordinario">Publico extraordinario</option>
@@ -67,7 +69,7 @@
 
                 <div class="input-group">
                     <label for="hoursWorked">Total horas:</label>
-                    <input type="number" id="hoursWorked" value="8" min="0">
+                    <input type="number" id="hoursWorked" value="8" min="0" required>
                 </div>
             </div>
 
@@ -76,45 +78,47 @@
             </div>
 
             <div class="button-group">
-                <button id="viewDetailsButton">Ver Detalles</button>
+                <button id="viewDetailsButton" type="button">Ver Detalles</button>
             </div>
 
              <div class="additional-prices">
                 <h2>Precios Adicionales</h2>
-                <table id="additionalPricesTable">
-                    <thead>
-                        <tr>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Publico ordinario</td>
-                            <td><input type="number" value="50" class="price-input" data-description="Publico ordinario"></td>
-                        </tr>
-                        <tr>
-                            <td>Publico extraordinario</td>
-                            <td><input type="number" value="75" class="price-input" data-description="Publico extraordinario"></td>
-                        </tr>
-                        <tr>
-                            <td>Privado extraordinario</td>
-                            <td><input type="number" value="100" class="price-input" data-description="Privado extraordinario"></td>
-                        </tr>
-                        <tr>
-                            <td>Privado ordinario</td>
-                            <td><input type="number" value="120" class="price-input" data-description="Privado ordinario"></td>
-                        </tr>
-                        <tr>
-                            <td>Extras</td>
-                            <td><input type="number" value="30" class="price-input" data-description="Extras"></td>
-                        </tr>
-                        <tr>
-                            <td>Otros</td>
-                            <td><input type="number" value="40" class="price-input" data-description="Otros"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table id="additionalPricesTable">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Publico ordinario</td>
+                                <td><input type="number" value="50" class="price-input" data-description="Publico ordinario"></td>
+                            </tr>
+                            <tr>
+                                <td>Publico extraordinario</td>
+                                <td><input type="number" value="75" class="price-input" data-description="Publico extraordinario"></td>
+                            </tr>
+                            <tr>
+                                <td>Privado extraordinario</td>
+                                <td><input type="number" value="100" class="price-input" data-description="Privado extraordinario"></td>
+                            </tr>
+                            <tr>
+                                <td>Privado ordinario</td>
+                                <td><input type="number" value="120" class="price-input" data-description="Privado ordinario"></td>
+                            </tr>
+                            <tr>
+                                <td>Extras</td>
+                                <td><input type="number" value="30" class="price-input" data-description="Extras"></td>
+                            </tr>
+                            <tr>
+                                <td>Otros</td>
+                                <td><input type="number" value="40" class="price-input" data-description="Otros"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

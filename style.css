@@ -2,26 +2,23 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #2c3e50, #3498db);
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 20px;
     min-height: 100vh;
     color: white;
     line-height: 1.6;
-    touch-action: manipulation; /* Prevent double-tap zoom and scrolling */
+    box-sizing: border-box;
 }
 
 .container {
     position: relative;
     background-color: rgba(255, 255, 255, 0.15);  
-    padding: 10px;  
+    padding: 20px;  
     border-radius: 12px;  
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    width: 100%; /* Full width on mobile */
-    max-width: 350px;  
-    margin: 10px;
-    transition: all 0.3s ease;  
-    overflow: hidden; /* Prevent content from overflowing */
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 .container:hover {
@@ -281,4 +278,75 @@ select {
     -ms-user-select: text;
     user-select: text;
     touch-action: pan-y; /* Allow vertical scrolling only */
+}
+
+/* Ajustes para pantallas más grandes */
+@media screen and (min-width: 768px) {
+    .container {
+        padding: 30px;
+    }
+
+    .input-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .calculator h1 {
+        font-size: 1.5em;
+    }
+
+    .totals {
+        font-size: 1em;
+        padding: 15px;
+    }
+
+    input, select {
+        font-size: 1em;
+        padding: 10px;
+    }
+
+    button {
+        font-size: 1em;
+        padding: 10px 15px;
+    }
+
+    #details {
+        font-size: 0.9em;
+    }
+}
+
+/* Ajustes para pantallas muy grandes */
+@media screen and (min-width: 1200px) {
+    .container {
+        max-width: 1000px;
+    }
+}
+
+/* Ajustes para mejorar la visualización en diferentes navegadores */
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Asegurar que las tablas sean responsivas */
+table {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+/* Mejorar la visualización de los inputs en diferentes navegadores */
+input, select, textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 8px;
+}
+
+/* Asegurar que los botones sean clickeables en dispositivos táctiles */
+button {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
