@@ -178,35 +178,46 @@ document.addEventListener('DOMContentLoaded', () => {
         const priceInput = additionalPricesTable.querySelector(`[data-description="${serviceType}"]`);
         const additionalPrice = priceInput ? parseFloat(priceInput.value) : 0;
 
+        if (!date || !serviceName || !serviceType || !hours) {
+            alert('Por favor, complete todos los campos.');
+            return;
+        }
+
         const totalPay = hours * additionalPrice;
 
-        const newRow = tableBody.insertRow();
-        const rowData = [date, serviceName, serviceType, hours, additionalPrice, totalPay.toFixed(2)];
-        rowData.forEach(text => {
-            const cell = newRow.insertCell();
-            cell.textContent = text;
-        });
+        // Guardar en localStorage
+        const storedData = JSON.parse(localStorage.getItem('detailsTableData') || '[]');
+        const newEntry = [date, serviceName, serviceType, hours.toString(), additionalPrice.toString(), totalPay.toFixed(2)];
+        storedData.push(newEntry);
+        localStorage.setItem('detailsTableData', JSON.stringify(storedData));
 
-        // Modify delete button creation
-        const deleteCell = newRow.insertCell();
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = '✖';
-        deleteButton.classList.add('delete-btn');
-        deleteButton.addEventListener('click', () => {
-            tableBody.removeChild(newRow);
-            updateTotals();
-            saveDataToLocalStorage(); // Save data after deletion
-        });
-        deleteCell.appendChild(deleteButton);
+        // Actualizar la tabla si estamos en la página principal
+        if (tableBody) {
+            const newRow = tableBody.insertRow();
+            newEntry.forEach(text => {
+                const cell = newRow.insertCell();
+                cell.textContent = text;
+            });
 
-        // Optional: Clear the input fields after saving
+            const deleteCell = newRow.insertCell();
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = '✖';
+            deleteButton.classList.add('delete-btn');
+            deleteButton.addEventListener('click', () => {
+                tableBody.removeChild(newRow);
+                updateTotals();
+                saveDataToLocalStorage();
+            });
+            deleteCell.appendChild(deleteButton);
+        }
+
+        // Limpiar campos
         dateInput.value = '';
         serviceNameInput.value = '';
         serviceTypeInput.value = '';
         hoursWorkedInput.value = '8';
         updateTotalPayOutput();
         updateTotals();
-        saveDataToLocalStorage(); // Save data after saving
     }
 
     function updateTotals() {
@@ -319,4 +330,120 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     interactiveElements.forEach(addVibrationFeedback);
+
+    // Función para cargar y mostrar datos en la página de detalles
+    function loadAndDisplayDetails() {
+        const detailsTableBody = document.getElementById('detailsTableBody');
+        if (!detailsTableBody) return;
+
+        const storedData = JSON.parse(localStorage.getItem('detailsTableData') || '[]');
+        detailsTableBody.innerHTML = '';
+
+        storedData.forEach(entry => {
+            const row = document.createElement('tr');
+            entry.forEach(text => {
+                const cell = document.createElement('td');
+                cell.textContent = text;
+                row.appendChild(cell);
+            });
+            detailsTableBody.appendChild(row);
+        });
+
+        calculateMonthSummaries(storedData);
+    }
+
+    // Función para calcular los resúmenes mensuales
+    function calculateMonthSummaries(details) {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth();
+
+        let firstHalfTotal = 0;
+        let secondHalfTotal = 0;
+        let firstHalfHours = 0;
+        let secondHalfHours = 0;
+
+        details.forEach(detail => {
+            const [dateString, , , hoursStr, , totalStr] = detail;
+            const date = new Date(dateString);
+            
+            if (date.getFullYear() === currentYear && date.getMonth() === currentMonth) {
+                const hours = parseFloat(hoursStr);
+                const total = parseFloat(totalStr);
+                
+                if (date.getDate() <= 15) {
+                    firstHalfHours += hours;
+                    firstHalfTotal += total;
+                } else {
+                    secondHalfHours += hours;
+                    secondHalfTotal += total;
+                }
+            }
+        });
+
+        // Actualizar los elementos de resumen si existen
+        const summaryHoursFirstHalf = document.getElementById('summaryHoursFirstHalf');
+        const summaryTotalFirstHalf = document.getElementById('summaryTotalFirstHalf');
+        const summaryHoursSecondHalf = document.getElementById('summaryHoursSecondHalf');
+        const summaryTotalSecondHalf = document.getElementById('summaryTotalSecondHalf');
+
+        if (summaryHoursFirstHalf) summaryHoursFirstHalf.textContent = `${firstHalfHours.toFixed(2)} h`;
+        if (summaryTotalFirstHalf) summaryTotalFirstHalf.textContent = `$${firstHalfTotal.toFixed(2)}`;
+        if (summaryHoursSecondHalf) summaryHoursSecondHalf.textContent = `${secondHalfHours.toFixed(2)} h`;
+        if (summaryTotalSecondHalf) summaryTotalSecondHalf.textContent = `$${secondHalfTotal.toFixed(2)}`;
+    }
+
+    // Cargar datos al iniciar
+    if (document.getElementById('detailsTableBody')) {
+        loadAndDisplayDetails();
+    } else {
+        loadDataFromLocalStorage();
+    }
+
+    // Función para filtrar los detalles
+    function filterDetails() {
+        const filterDate = document.getElementById('filterDate');
+        const filterService = document.getElementById('filterService');
+        const filterType = document.getElementById('filterType');
+        const detailsTableBody = document.getElementById('detailsTableBody');
+
+        if (!filterDate || !filterService || !filterType || !detailsTableBody) return;
+
+        const dateValue = filterDate.value;
+        const serviceValue = filterService.value.toLowerCase();
+        const typeValue = filterType.value;
+
+        const storedData = JSON.parse(localStorage.getItem('detailsTableData') || '[]');
+        const filteredData = storedData.filter(entry => {
+            const [date, service, type] = entry;
+            const matchDate = !dateValue || date === dateValue;
+            const matchService = !serviceValue || service.toLowerCase().includes(serviceValue);
+            const matchType = !typeValue || type === typeValue;
+            return matchDate && matchService && matchType;
+        });
+
+        // Actualizar la tabla con los datos filtrados
+        detailsTableBody.innerHTML = '';
+        filteredData.forEach(entry => {
+            const row = document.createElement('tr');
+            entry.forEach(text => {
+                const cell = document.createElement('td');
+                cell.textContent = text;
+                row.appendChild(cell);
+            });
+            detailsTableBody.appendChild(row);
+        });
+
+        // Recalcular los resúmenes con los datos filtrados
+        calculateMonthSummaries(filteredData);
+    }
+
+    // Agregar event listeners para los filtros
+    const filterDate = document.getElementById('filterDate');
+    const filterService = document.getElementById('filterService');
+    const filterType = document.getElementById('filterType');
+
+    if (filterDate) filterDate.addEventListener('change', filterDetails);
+    if (filterService) filterService.addEventListener('input', filterDetails);
+    if (filterType) filterType.addEventListener('change', filterDetails);
 });
