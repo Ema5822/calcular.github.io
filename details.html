@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#2c3e50">
+    <title>Detalles de Servicios</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            line-height: 1.6;
+            font-size: 14px;
+            padding: 0;
+            touch-action: manipulation;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 350px;
+            margin: 5px;
+        }
+
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .filter-section input, 
+        .filter-section select {
+            background-color: rgba(52, 73, 94, 0.6);
+            border: 1px solid #34495e;
+            border-radius: 8px;
+            color: white;
+            padding: 5px;
+            flex-grow: 1;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        table, th, td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+            color: white;
+        }
+
+        th {
+            background-color: rgba(52, 152, 219, 0.3);
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .back-button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .back-button:hover {
+            background-color: #27ae60;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(52, 73, 94, 0.6);
+            border-radius: 8px;
+        }
+
+        .summary-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .summary-block {
+            background-color: rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            flex: 1;
+            text-align: center;
+        }
+        .summary-block h2 {
+            margin-top: 0;
+            color: white;
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+        .summary-total {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Prevent text selection and zooming */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        /* Allow text input selection */
+        input {
+            -webkit-user-select: text;
+            -khtml-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Detalles de Servicios</h1>
+        
+        <div class="summary-section">
+            <div class="summary-block">
+                <h2>Resumen (1-15 del mes actual)</h2>
+                <div id="summaryHoursFirstHalf" class="summary-total">0 h</div>
+                <div id="summaryTotalFirstHalf" class="summary-total">$0.00</div>
+            </div>
+            <div class="summary-block">
+                <h2>Resumen (16-31 del mes actual)</h2>
+                <div id="summaryHoursSecondHalf" class="summary-total">0 h</div>
+                <div id="summaryTotalSecondHalf" class="summary-total">$0.00</div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <input type="date" id="filterDate" placeholder="Filtrar por fecha">
+            <input type="text" id="filterService" placeholder="Filtrar por servicio">
+            <select id="filterType">
+                <option value="">Filtrar por tipo</option>
+                <option value="Publico ordinario">Publico ordinario</option>
+                <option value="Publico extraordinario">Publico extraordinario</option>
+                <option value="Privado extraordinario">Privado extraordinario</option>
+                <option value="Privado ordinario">Privado ordinario</option>
+                <option value="Extras">Extras</option>
+                <option value="Otros">Otros</option>
+            </select>
+        </div>
+
+        <table id="detailsTable">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Servicio</th>
+                    <th>Tipo</th>
+                    <th>Horas</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="detailsTableBody">
+                <!-- Rows will be dynamically populated -->
+            </tbody>
+        </table>
+        <button class="back-button" onclick="window.location.href='index.html'">Volver</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const detailsTableBody = document.getElementById('detailsTableBody');
+            const filterDate = document.getElementById('filterDate');
+            const filterService = document.getElementById('filterService');
+            const filterType = document.getElementById('filterType');
+            const summaryTotalFirstHalf = document.getElementById('summaryTotalFirstHalf');
+            const summaryTotalSecondHalf = document.getElementById('summaryTotalSecondHalf');
+            const summaryHoursFirstHalf = document.getElementById('summaryHoursFirstHalf');
+            const summaryHoursSecondHalf = document.getElementById('summaryHoursSecondHalf');
+            
+            let savedDetails = [];
+
+            // Retrieve and display saved details
+            const storedDetails = localStorage.getItem('detailsTableData');
+            if (storedDetails) {
+                savedDetails = JSON.parse(storedDetails);
+                populateTable(savedDetails);
+                calculateMonthSummaries(savedDetails);
+            }
+
+            function populateTable(details) {
+                // Clear existing rows
+                detailsTableBody.innerHTML = '';
+
+                if (details.length === 0) {
+                    const noResultsRow = detailsTableBody.insertRow();
+                    const noResultsCell = noResultsRow.insertCell();
+                    noResultsCell.colSpan = 7;
+                    noResultsCell.classList.add('no-results');
+                    noResultsCell.textContent = 'No hay resultados';
+                    // Also update summaries to 0
+                    summaryHoursFirstHalf.textContent = '0 h';
+                    summaryHoursSecondHalf.textContent = '0 h';
+                    summaryTotalFirstHalf.textContent = '$0.00';
+                    summaryTotalSecondHalf.textContent = '$0.00';
+                    return;
+                }
+
+                details.forEach(detail => {
+                    const row = document.createElement('tr');
+                    detail.forEach(cellData => {
+                        const cell = document.createElement('td');
+                        cell.textContent = cellData;
+                        row.appendChild(cell);
+                    });
+
+                    // Add delete button cell
+                    const deleteCell = document.createElement('td');
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = '✖';
+                    deleteButton.classList.add('delete-btn');
+                    deleteButton.style.cssText = `
+                        background: none;
+                        border: none;
+                        color: #e74c3c;
+                        font-size: 16px;
+                        cursor: pointer;
+                        padding: 0;
+                        line-height: 1;
+                        transition: color 0.3s ease;
+                    `;
+                    deleteButton.addEventListener('click', () => {
+                        // Remove the row and update data
+                        row.remove();
+                        const updatedDetails = savedDetails.filter(savedDetail => 
+                            !savedDetail.every((val, index) => val === detail[index])
+                        );
+                        savedDetails = updatedDetails;
+                        localStorage.setItem('detailsTableData', JSON.stringify(updatedDetails));
+                        
+                        // Recalculate summaries
+                        calculateMonthSummaries(updatedDetails);
+                    });
+                    deleteCell.appendChild(deleteButton);
+                    row.appendChild(deleteCell);
+
+                    detailsTableBody.appendChild(row);
+                });
+            }
+
+            // Utilidad: Convertir yyyy-mm-dd a objeto Date correctamente
+            function parseISODate(dateString) {
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return null;
+                const [year, month, day] = dateString.split('-').map(Number);
+                return new Date(Date.UTC(year, month - 1, day));
+            }
+
+            function calculateMonthSummaries(details) {
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear();
+                const currentMonth = currentDate.getMonth(); // 0-based
+
+                let firstHalfTotal = 0;
+                let secondHalfTotal = 0;
+                let firstHalfHours = 0;
+                let secondHalfHours = 0;
+
+                details.forEach(detail => {
+                    // detail: [fecha, servicio, tipo, horas, precio, total]
+                    const [dateString, , , horasStr, , totalStr] = detail;
+                    const parsedDate = parseISODate(dateString);
+
+                    if (!parsedDate) return;
+
+                    const dateYear = parsedDate.getUTCFullYear();
+                    const dateMonth = parsedDate.getUTCMonth();
+                    const dateDay = parsedDate.getUTCDate();
+
+                    if (dateYear === currentYear && dateMonth === currentMonth) {
+                        const totalCol = parseFloat(totalStr);
+                        const horasCol = parseFloat(horasStr);
+
+                        if (dateDay >= 1 && dateDay <= 15) {
+                            firstHalfTotal += Number.isFinite(totalCol) ? totalCol : 0;
+                            firstHalfHours += Number.isFinite(horasCol) ? horasCol : 0;
+                        } else if (dateDay >= 16 && dateDay <= 31) {
+                            secondHalfTotal += Number.isFinite(totalCol) ? totalCol : 0;
+                            secondHalfHours += Number.isFinite(horasCol) ? horasCol : 0;
+                        }
+                    }
+                });
+
+                summaryTotalFirstHalf.textContent = `$${firstHalfTotal.toFixed(2)}`;
+                summaryTotalSecondHalf.textContent = `$${secondHalfTotal.toFixed(2)}`;
+                summaryHoursFirstHalf.textContent = `${firstHalfHours.toFixed(2)} h`;
+                summaryHoursSecondHalf.textContent = `${secondHalfHours.toFixed(2)} h`;
+            }
+
+            function filterTable() {
+                const dateValue = filterDate.value.toLowerCase();
+                const serviceValue = filterService.value.toLowerCase();
+                const typeValue = filterType.value.toLowerCase();
+
+                const filteredDetails = savedDetails.filter(detail => {
+                    const [date, service, type, ...rest] = detail;
+                    
+                    const matchDate = !dateValue || date.toLowerCase().includes(dateValue);
+                    const matchService = !serviceValue || service.toLowerCase().includes(serviceValue);
+                    const matchType = !typeValue || type.toLowerCase() === typeValue;
+
+                    return matchDate && matchService && matchType;
+                });
+
+                populateTable(filteredDetails);
+                calculateMonthSummaries(filteredDetails);
+            }
+
+            // Add event listeners for filtering
+            filterDate.addEventListener('input', filterTable);
+            filterService.addEventListener('input', filterTable);
+            filterType.addEventListener('change', filterTable);
+        });
+    </script>
+</body>
+</html>

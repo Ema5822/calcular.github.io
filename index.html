@@ -1,0 +1,124 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#2c3e50">
+    <title>Calculadora de Horas y Pago</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "moment": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+            }
+        }
+    </script>
+    <!-- Add touch-icon for Android -->
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <!-- Prevent zooming -->
+    <style>
+        html, body {
+            touch-action: manipulation;
+            -ms-touch-action: manipulation;
+        }
+        input, select, textarea {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="calculator">
+            <button id="donationsButton">
+                <span class="dollar-sign">$</span>
+            </button>
+            <h1><u>Tu Balance</u></h1>
+
+            <div class="totals">
+                <p>Total Horas: <span id="totalHours">0</span></p>
+                <p>Total Ganado: <span id="totalEarned">0</span></p>
+            </div>
+
+            <div class="input-grid">
+                <div class="input-group full-width">
+                    <label for="date">Fecha de servicio:</label>
+                    <input type="date" id="date">
+                </div>
+
+                <div class="input-group full-width">
+                    <label for="serviceName">Nombre de servicio:</label>
+                    <input type="text" id="serviceName">
+                </div>
+
+                <div class="input-group">
+                    <label for="serviceType">Tipo de servicio:</label>
+                    <select id="serviceType">
+                        <option value="">Seleccionar tipo de servicio</option>
+                        <option value="Publico ordinario">Publico ordinario</option>
+                        <option value="Publico extraordinario">Publico extraordinario</option>
+                        <option value="Privado extraordinario">Privado extraordinario</option>
+                        <option value="Privado ordinario">Privado ordinario</option>
+                        <option value="Extras">Extras</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="hoursWorked">Total horas:</label>
+                    <input type="number" id="hoursWorked" value="8" min="0">
+                </div>
+            </div>
+
+            <div class="result">
+                <p id="totalTotalPay">Total: <span>$0.00</span></p>
+            </div>
+
+            <div class="button-group">
+                <button id="viewDetailsButton">Ver Detalles</button>
+            </div>
+
+             <div class="additional-prices">
+                <h2>Precios Adicionales</h2>
+                <table id="additionalPricesTable">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Publico ordinario</td>
+                            <td><input type="number" value="50" class="price-input" data-description="Publico ordinario"></td>
+                        </tr>
+                        <tr>
+                            <td>Publico extraordinario</td>
+                            <td><input type="number" value="75" class="price-input" data-description="Publico extraordinario"></td>
+                        </tr>
+                        <tr>
+                            <td>Privado extraordinario</td>
+                            <td><input type="number" value="100" class="price-input" data-description="Privado extraordinario"></td>
+                        </tr>
+                        <tr>
+                            <td>Privado ordinario</td>
+                            <td><input type="number" value="120" class="price-input" data-description="Privado ordinario"></td>
+                        </tr>
+                        <tr>
+                            <td>Extras</td>
+                            <td><input type="number" value="30" class="price-input" data-description="Extras"></td>
+                        </tr>
+                        <tr>
+                            <td>Otros</td>
+                            <td><input type="number" value="40" class="price-input" data-description="Otros"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js" type="module"></script>
+</body>
+</html>
